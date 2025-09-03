@@ -11,7 +11,8 @@ const LoginUserForm = () => {
     const [Password, setPassword] = useState('');
     const [isAlert, setIsAlert] = useState(false);
     const [isSuccess, setSuccess] = useState(false);
-    const [response_backend,setResponseB] = useState([]);
+    const [server_error,setServer] = useState(false);
+    const [response_backend,setResponseB] = useState({ data: {} });
 
 
 
@@ -39,12 +40,23 @@ const LoginUserForm = () => {
                 method: 'POST',
                 body: formdata
             }).then(response => {
-               
+                if(!response.ok){
+                    return {
+                        data:{
+                            Code:500,
+                            Message:"SERVER INTERNAL ERROR"
+                        }
+                    }
+                }
                 return response.json();
+                
             }).then(data => {
-                console.log(data)
+                setServer(false);
+                //console.log(data)
                 setSuccess(true);
                 setResponseB(data);
+            }).catch(error=>{
+                setServer(error);
             })
         }
     }
@@ -88,10 +100,12 @@ const LoginUserForm = () => {
                                 <ButtonComponent variant='contained' sx={{ bgcolor: '#759ADB' }} onClick={LoginAccount} text="Iniciar Sesion" />
                                 <ButtonComponent variant='contained' sx={{ bgcolor: '#2bb675ff' }} onClick={CreateAccount} text="Soy Nuevo" />
                                 <ButtonComponent variant='text' onClick={RecoverAccount} text="Recuperar Cuenta" />
-                                {isAlert && <Alert severity="error">Campos incompletos</Alert>}
-                                {(response_backend.data.Code===404) &&<Alert severity="error">{response_backend.data.Message}</Alert>}
+                                {isAlert && <Alert severity="info">Campos incompletos</Alert>}
+                                {(response_backend.data.Code===404) &&<Alert severity="info">{response_backend.data.Message}</Alert>}
                                 {(response_backend.data.Code===403) &&<Alert severity="warning">{response_backend.data.Message}</Alert>}
                                 {(response_backend.data.Code===200) &&<Alert severity="success">{response_backend.data.Message}</Alert>}
+                                {(response_backend.data.Code===500) &&<Alert severity="error">{response_backend.data.Message}</Alert>}
+                                {server_error &&(<Alert severity="error">Failed to fecth</Alert>)}
                             </Stack>
                         </Grid>
                     </Grid>
