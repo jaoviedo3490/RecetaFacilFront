@@ -4,6 +4,7 @@ import Card from '@mui/material/Card';
 import ButtonComponent from "./Button";
 import InputComponent from "./InputComponent";
 import { useState, useEffect } from "react";
+import CreateUser from "./CreateUser";
 
 
 const LoginUserForm = () => {
@@ -13,13 +14,13 @@ const LoginUserForm = () => {
     const [isSuccess, setSuccess] = useState(false);
     const [server_error,setServer] = useState(false);
     const [response_backend,setResponseB] = useState({ data: {} });
+    const [openModal,setOpen] = useState(false);
+
+    const handleCloseModal =()=>{setOpen(false)}
 
 
-
-    const CreateAccount = (Event) => {
-        Event.preventDefault();
-        alert('no pues , ta bien');
-
+    const CreateAccount = () => {
+        setOpen(true);
     }
     const LoginAccount = (Event) => {
         Event.preventDefault();
@@ -111,7 +112,8 @@ const LoginUserForm = () => {
                     </Grid>
                 </CardContent>
             </Card>
+            <CreateUser open={openModal} onClose={handleCloseModal}></CreateUser>
         </Container>
     );
 }
-export default LoginUserForm;
+export default LoginUserForm; 
