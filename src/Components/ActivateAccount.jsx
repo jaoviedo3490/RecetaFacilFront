@@ -121,12 +121,9 @@ const LoginUserForm = () => {
                         <Grid item >
                             <Stack direction='column' spacing={2}>
                                 {<Typography variant="h6">Receta Facil</Typography>}
-                                <InputComponent variant='standard' onChange={InputValidate} label="Correo" type='email' />
-                                <InputComponent variant='standard' label="Contraseña" onChange={PasswordValidate} type={RevealPass ? 'text' : 'password'} />
-                                <FormControlLabel control={<Checkbox checked={RevealPass} onChange={RevealPassCheck} />} label='Mostrar contraseña' />
-                                <ButtonComponent variant='contained' sx={{ bgcolor: '#759ADB' }} onClick={LoginAccount} text="Iniciar Sesion" />
-                                <ButtonComponent variant='contained' sx={{ bgcolor: '#2bb675ff' }} onClick={CreateAccount} text="Soy Nuevo" />
-                                <ButtonComponent variant='text' onClick={RecoverAccount} text="Recuperar Cuenta" />
+                                <InputComponent variant='standard' onChange={InputValidate} label="Token" />
+                                
+                                <ButtonComponent variant='text' onClick={RecoverAccount} text="Activar Cuenta" />
                                 {isAlert && <Alert severity="info">Campos incompletos</Alert>}
                                 {(response_backend.data.Code === 404) && <Alert severity="info">{response_backend.data.Message}</Alert>}
                                 {(response_backend.data.Code === 403) && <Alert severity="warning">{response_backend.data.Message}</Alert>}
