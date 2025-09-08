@@ -2,12 +2,12 @@ import { Grid, Container, Stack, Typography, Alert, FormControlLabel, Checkbox, 
 import ButtonComponent from "./Button";
 import InputComponent from "./InputComponent";
 import { useState, useEffect } from "react";
-import { Password } from "@mui/icons-material";
 
 
-const ActivateAccount = (props) => {
 
-    const [Token, setToken] = useState('');
+const RecoverAccount = (props) => {
+
+    const [Email, setEmail] = useState('');
     const [isAlert, setIsAlert] = useState(false);
     const [response_backend, setResponseB] = useState({ data: {} });
     const [openLoadingScreen, setLoadingScreen] = useState(false);
@@ -15,7 +15,6 @@ const ActivateAccount = (props) => {
     const [isWarning, setWarning] = useState(false);
     const [isInfo, setInfo] = useState(false);
     const [isError, setError] = useState(false);
-    const [isRecover,setRecover] = useState(false);
 
     const resetVars = () => {
         setError(false);
@@ -58,29 +57,19 @@ const ActivateAccount = (props) => {
             return () => clearTimeout(timer);
         }
     }, [isInfo]);
-    const ActivateLogin = (Event) => {
-        Event.preventDefault();
-        if (Token.length < 3) {
+    const ActivateRecoverLogin = (Event) => {
+        if (Email.length < 3) {
             setIsAlert(true);
             setSuccess(false);
-            setToken(Event.target.value)
+            setEmail(Event.target.value)
         } else {
             setIsAlert(false);
 
-            let formdata = new FormData();
 
-
-            formdata.append('email', props.email);
-            formdata.append('token', Token);
-            formdata.append('id', props.id);
-            console.log(props.email);
-            console.log(props.id);
-            console.log(Token);
 
             setLoadingScreen(true);
-            fetch('http://localhost/recetaFacil/RecetaFacil.com/public/Services/loginUser/ActivateAccount', {
-                method: 'POST',
-                body: formdata
+            fetch(`http://localhost/recetaFacil/RecetaFacil.com/public/Services/loginUser/${encodeURIComponent(Email)}`, {
+                method: 'GET',
             }).then(response => {
                 if (!response.ok) {
                     return {
@@ -91,7 +80,7 @@ const ActivateAccount = (props) => {
                 return response.json();
 
             }).then(data => {
-                console.log(`${JSON.stringify(data)}`);
+                console.log(data.data);
                 switch (data.statusCode) {
                     case 200:
                         resetVars();
@@ -99,8 +88,16 @@ const ActivateAccount = (props) => {
                             case 401: setInfo(true); break;
                             case 404: setInfo(true); break;
                             case 403: setWarning(true); break;
-                            case 200: setSuccess(true); break;
-                            case 201: setSuccess(true); setToken(''); break;
+                            case 200: setSuccess(true);
+                                props.onClose();
+                                if (props.onSuccess) {
+                                    onSuccess({
+                                        email: data.data.email,
+                                        id: data.data.id
+                                    })
+                                }
+                                break;
+                            case 201: setSuccess(true); setEmail(''); break;
                             case 500: setError(true); break;
                             default: setInfo(true); break;
                         }
@@ -126,7 +123,7 @@ const ActivateAccount = (props) => {
 
 
     const InputValidate = (Event) => {
-        setToken(Event.target.value);
+        setEmail(Event.target.value);
         setIsAlert(false);
     }
 
@@ -152,15 +149,14 @@ const ActivateAccount = (props) => {
                     <Grid item >
                         <Stack direction='column' spacing={2}>
                             <Typography variant="h6">Receta Facil</Typography>
-                            <InputComponent variant='standard' onChange={InputValidate} label="Token" value={Token} />
-                            {isRecover && (<InputComponent variant='standard' type={Password} onChange={InputValidate} label="Contraseña" value={Token} />)}
-                            <ButtonComponent variant='text' onClick={ActivateLogin} text="Activar Cuenta" />
+                            <InputComponent variant='standard' onChange={InputValidate} label="Correo" value={Email} />
+                            <ButtonComponent variant='text' onClick={ActivateRecoverLogin} text="Enviar codigo de Recuperación" />
                             <ButtonComponent variant='contained' sx={{ bgcolor: '#db7875ff' }} onClick={props.onClose} text="Regresar" />
                             {isAlert && <Alert severity="info">Campos incompletos</Alert>}
                             {(isInfo) && <Alert severity="info">{response_backend.data.Message}</Alert>}
                             {(isWarning) && <Alert severity="warning">{response_backend.data.Message}</Alert>}
-                            {(isSuccess) && <Alert severity="success">{response_backend.data.Message}</Alert>}
-                            {(isError) && <Alert severity="error">{response_backend.data.Message}</Alert>}
+                            {(isSuccess) && <Alert severity="success">{response_backend.Message}</Alert>}
+                            {(isError) && <Alert severity="error">{response_backend.Message}</Alert>}
                         </Stack>
                     </Grid>
                 </Grid>
@@ -172,4 +168,4 @@ const ActivateAccount = (props) => {
         </Modal >
     );
 }
-export default ActivateAccount; 
+export default RecoverAccount; 

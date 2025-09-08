@@ -1,9 +1,9 @@
-import { Modal, Typography, Container, Grid, Stack, Alert, Checkbox, FormControlLabel, Box, CircularProgress, Backdrop } from "@mui/material";
+import { Modal, Typography, Grid, Stack, Alert, Checkbox, FormControlLabel, Box, CircularProgress, Backdrop } from "@mui/material";
 import ButtonComponent from "./Button";
 import InputComponent from "./InputComponent";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Password } from "@mui/icons-material";
+
 
 const CreateUser = (props) => {
     const [UserName, setUserName] = useState('');
@@ -56,8 +56,8 @@ const CreateUser = (props) => {
             if (!response.ok) {
                 //setLoadingScreen(true);
                 return {
-                        statusCode: 500,
-                        Message: "SERVER INTERNAL ERROR"
+                    statusCode: 500,
+                    Message: "SERVER INTERNAL ERROR"
                 }
             }
             return response.json();
@@ -67,22 +67,28 @@ const CreateUser = (props) => {
             setUserName('');
             setPassWordVerify('');
             setLoadingScreen(false);
-            console.log(data);
             debugger;
             switch (data.statusCode) {
                 case 200:
                     if (data.data.Code === '200') {
                         SetResponseBack(data.data.Message);
                         setSuccess(true);
-                       
+                        props.onClose();
+                        if (props.onSuccess) {
+
+                            props.onSuccess({
+                                email:data.data.Data.Data,
+                                id:data.data.Data.id
+                            }); 
+                        }
+
+
                     } else if (data.data.Code === '201') {
-                        console.log(data)
                         SetResponseBack(data.data.Message);
                         setInfo(true);
-                    } 
+                    }
                     else if (data.data.Code === 409) {
-                        console.log(data)
-                        
+
                         SetResponseBack(data.data.Message);
                         setInfo(true);
                     } else if (data.data.Code === '500') {
@@ -97,7 +103,6 @@ const CreateUser = (props) => {
                     break;
                 default:
                     debugger;
-                    console.log(data.statusCode)
                     SetResponseBack(data.Message);
                     setWarning(true);
                     break;
@@ -106,7 +111,6 @@ const CreateUser = (props) => {
             setLoadingScreen(false);
             setError(true);
             SetResponseBack(`Excepcion encontrada: ${error.message}`);
-            console.log(error);
         })
     }
 
@@ -157,7 +161,7 @@ const CreateUser = (props) => {
     useEffect(() => {
         if (isSuccess) {
             const timer = setTimeout(() => setSuccess(false), 3000);
-            
+
             return () => clearTimeout(timer);
         }
     }, [isSuccess]);
