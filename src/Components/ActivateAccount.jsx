@@ -17,6 +17,17 @@ const ActivateAccount = (props) => {
     const [isError, setError] = useState(false);
     const [isRecover,setRecover] = useState(false);
 
+useEffect(() => {
+    if (props.recover) {
+        setRecover(true);
+    }
+}, [props.recover]);
+
+useEffect(()=>{
+    if(isRecover){
+       ActivateLogin();
+    }
+},[isRecover])
     const resetVars = () => {
         setError(false);
         setInfo(false);
@@ -58,12 +69,10 @@ const ActivateAccount = (props) => {
             return () => clearTimeout(timer);
         }
     }, [isInfo]);
-    const ActivateLogin = (Event) => {
-        Event.preventDefault();
+    const ActivateLogin = () => {
         if (Token.length < 3) {
             setIsAlert(true);
             setSuccess(false);
-            setToken(Event.target.value)
         } else {
             setIsAlert(false);
 
@@ -153,8 +162,9 @@ const ActivateAccount = (props) => {
                         <Stack direction='column' spacing={2}>
                             <Typography variant="h6">Receta Facil</Typography>
                             <InputComponent variant='standard' onChange={InputValidate} label="Token" value={Token} />
-                            {isRecover && (<InputComponent variant='standard' type={Password} onChange={InputValidate} label="Contraseña" value={Token} />)}
-                            <ButtonComponent variant='text' onClick={ActivateLogin} text="Activar Cuenta" />
+                            {isRecover && (<InputComponent variant='standard' type='Password'  label="Contraseña" />)}
+                            {isRecover && (<InputComponent variant='standard' type='Password'  label="Contraseña Nueva" />)}
+                            <ButtonComponent variant='text' onClick={ActivateLogin} text={isRecover ? "Actualizar contraseña" : "Activar Cuenta"} />
                             <ButtonComponent variant='contained' sx={{ bgcolor: '#db7875ff' }} onClick={props.onClose} text="Regresar" />
                             {isAlert && <Alert severity="info">Campos incompletos</Alert>}
                             {(isInfo) && <Alert severity="info">{response_backend.data.Message}</Alert>}

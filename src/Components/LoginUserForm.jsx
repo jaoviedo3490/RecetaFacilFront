@@ -24,9 +24,9 @@ const LoginUserForm = () => {
     const [isError, setError] = useState(false);
     const [createData, setCreateData] = useState('');
     const [isActivatedUser, setActivateRedis] = useState(false);
-    const [RecoverAccountUser,setRecover] = useState(false);
-    const [RecoverInput,setRecoverInput] = useState(false);
-    const [RecoverData,setRecoverData] = useState('');
+    const [RecoverAccountUser, setRecover] = useState(false);
+    const [RecoverInput, setRecoverInput] = useState(false);
+    const [RecoverData, setRecoverData] = useState('');
 
 
     const handleCloseModal = () => { setOpen(false) }
@@ -110,14 +110,16 @@ const LoginUserForm = () => {
                         }
                         debugger;
                         switch (data.data.Code) {
-                            case 404:setInfo(true);break;
-                            case 403:setWarning(true);break;
-                            case 200:setSuccess(true);break;
-                            case 500:setError(true); break;
-                            default:setInfo(true);break;
+                            case 404: setInfo(true); break;
+                            case 403: setWarning(true); break;
+                            case 200: setSuccess(true); break;
+                            case 500: setError(true); break;
+                            default: setInfo(true); break;
                         }
                         break;
                     case 500:
+                        setUser('');
+                        setPassword('');
                         setError(true);
                         setResponseB(data);
                         break;
@@ -132,9 +134,12 @@ const LoginUserForm = () => {
                     default:
                         setInfo(true);
                         setResponseB(data);
+                        break;
                 }
                 setLoadingScreen(false);
             }).catch(error => {
+                setUser('');
+                setPassword('');
                 setLoadingScreen(false);
                 setError(true);
                 setResponseB(`SERVER INTERNAL ERROR: ${error.message}`);
@@ -175,8 +180,8 @@ const LoginUserForm = () => {
                         <Grid item >
                             <Stack direction='column' spacing={2}>
                                 <Typography variant="h6">Receta Facil</Typography>
-                                <InputComponent variant='standard' onChange={InputValidate} label="Correo" type='email' />
-                                <InputComponent variant='standard' label="Contraseña" onChange={PasswordValidate} type={RevealPass ? 'text' : 'password'} />
+                                <InputComponent variant='standard' onChange={InputValidate} label="Correo" type='email' value={UserMail} />
+                                <InputComponent variant='standard' label="Contraseña" onChange={PasswordValidate} value={Password} type={RevealPass ? 'text' : 'password'} />
                                 <FormControlLabel control={<Checkbox checked={RevealPass} onChange={RevealPassCheck} />} label='Mostrar contraseña' />
                                 <ButtonComponent variant='contained' sx={{ bgcolor: '#759ADB' }} onClick={LoginAccount} text="Iniciar Sesion" />
                                 <ButtonComponent variant='contained' sx={{ bgcolor: '#2bb675ff' }} onClick={CreateAccount} text="Soy Nuevo" />
@@ -185,25 +190,25 @@ const LoginUserForm = () => {
                                 {(isInfo) && <Alert severity="info">{response_backend.data.Message}</Alert>}
                                 {(isWarning) && <Alert severity="warning">{response_backend.data.Message}</Alert>}
                                 {(isSuccess) && <Alert severity="success">{response_backend.data.Message}</Alert>}
-                                {(isError) && <Alert severity="error">{response_backend.data.Message}</Alert>}
+                                {(isError) && <Alert severity="error">{response_backend?.Message || 'SERVER INTERNAL ERROR'}</Alert>}
                             </Stack>
                         </Grid>
                     </Grid>
                 </CardContent>
             </Card>
-            {isActivatedUser && (<ActivateAccount open={isActivatedUser} onClose={handleCloseModalRedis} email={response_backend.data.email} id={response_backend.data.id}></ActivateAccount>)}
+
             <CreateUser open={openModal} onClose={handleCloseModal} onSuccess={(data) => {
                 setOpen(false);
                 setOpenRedis(true);
                 setCreateData(data);
             }}></CreateUser>
-            <ActivateAccount open={openRedis} onClose={handleCloseModalRedis} email={createData.email} id={createData.id}></ActivateAccount>
-            <RecoverAccount open={RecoverAccountUser} onClose={handleCloseModalRecover} onSuccess={(data)=>{
+            <RecoverAccount open={RecoverAccountUser} onClose={handleCloseModalRecover} onSuccess={(data) => {
                 setRecoverInput(true);
-                setOpenRedis(true);
                 setRecover(false);
+                setOpenRedis(true);
                 setRecoverData(data);
             }}></RecoverAccount>
+            <ActivateAccount open={openRedis} onClose={handleCloseModalRedis} email={createData?.email || RecoverData.email} id={createData?.id || RecoverData.id} recover={true}></ActivateAccount>
             <Backdrop open={openLoadingScreen} sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}>
                 <CircularProgress />
             </Backdrop>

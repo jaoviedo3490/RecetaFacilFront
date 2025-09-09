@@ -108,6 +108,10 @@ const CreateUser = (props) => {
                     break;
             }
         }).catch(error => {
+            setUserMail('');
+            setPassWord('');
+            setUserName('');
+            setPassWordVerify('');
             setLoadingScreen(false);
             setError(true);
             SetResponseBack(`Excepcion encontrada: ${error.message}`);
@@ -215,13 +219,13 @@ const CreateUser = (props) => {
                     <Grid item spacing={5} sx={{}}>
                         <Typography variant='h4' component='h5'>Nuevo Usuario</Typography>
                         <Stack direction='row' spacing={6}>
-                            <InputComponent variant='standard' type='text' onChange={UserNameInput} label='Nombre de Usuario'></InputComponent>
-                            <InputComponent variant='standard' type='mail' onChange={UserMailInput} label='Correo Electronico'></InputComponent>
+                            <InputComponent variant='standard' type='text' onChange={UserNameInput} label='Nombre de Usuario' value={UserName}></InputComponent>
+                            <InputComponent variant='standard' type='mail' onChange={UserMailInput} label='Correo Electronico' value={UserMail}></InputComponent>
                         </Stack>
 
                         <Stack direction='row' spacing={6}>
-                            <InputComponent variant='standard' type={RevealPass ? 'text' : 'password'} onChange={userPassWord} label='Contraseña'></InputComponent>
-                            <InputComponent variant='standard' type={RevealPass ? 'text' : 'password'} onChange={userPassWordVerify} label='Confirmar Contraseña'></InputComponent>
+                            <InputComponent variant='standard' type={RevealPass ? 'text' : 'password'} onChange={userPassWord} label='Contraseña' value={PassWord}></InputComponent>
+                            <InputComponent variant='standard' type={RevealPass ? 'text' : 'password'} onChange={userPassWordVerify} label='Confirmar Contraseña' value={PassWordVerify}></InputComponent>
                         </Stack>
                         <FormControlLabel control={<Checkbox checked={RevealPass} onChange={RevealPassCheck} />} label='Mostrar contraseña' />
                         <Stack direction='column' spacing={1}>
