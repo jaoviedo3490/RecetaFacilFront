@@ -15,19 +15,9 @@ const ActivateAccount = (props) => {
     const [isWarning, setWarning] = useState(false);
     const [isInfo, setInfo] = useState(false);
     const [isError, setError] = useState(false);
-    const [isRecover,setRecover] = useState(false);
 
-useEffect(() => {
-    if (props.recover) {
-        setRecover(true);
-    }
-}, [props.recover]);
 
-useEffect(()=>{
-    if(isRecover){
-       ActivateLogin();
-    }
-},[isRecover])
+
     const resetVars = () => {
         setError(false);
         setInfo(false);
@@ -69,24 +59,28 @@ useEffect(()=>{
             return () => clearTimeout(timer);
         }
     }, [isInfo]);
-    const ActivateLogin = () => {
+    const ActivateLogin = (Event) => {
+       Event.preventDefault();
+        debugger
         if (Token.length < 3) {
             setIsAlert(true);
             setSuccess(false);
         } else {
             setIsAlert(false);
-
+            debugger
             let formdata = new FormData();
 
-
+            alert(Token)
+            alert(props.email)
+            alert(props.id)
             formdata.append('email', props.email);
             formdata.append('token', Token);
             formdata.append('id', props.id);
             console.log(props.email);
             console.log(props.id);
             console.log(Token);
-
-            setLoadingScreen(true);
+            debugger
+            setLoadingScreen(true) ;
             fetch('http://localhost/recetaFacil/RecetaFacil.com/public/Services/loginUser/ActivateAccount', {
                 method: 'POST',
                 body: formdata
@@ -162,9 +156,7 @@ useEffect(()=>{
                         <Stack direction='column' spacing={2}>
                             <Typography variant="h6">Receta Facil</Typography>
                             <InputComponent variant='standard' onChange={InputValidate} label="Token" value={Token} />
-                            {isRecover && (<InputComponent variant='standard' type='Password'  label="Contraseña" />)}
-                            {isRecover && (<InputComponent variant='standard' type='Password'  label="Contraseña Nueva" />)}
-                            <ButtonComponent variant='text' onClick={ActivateLogin} text={isRecover ? "Actualizar contraseña" : "Activar Cuenta"} />
+                            <ButtonComponent variant='text' onClick={ActivateLogin} text={"Activar Cuenta"} />
                             <ButtonComponent variant='contained' sx={{ bgcolor: '#db7875ff' }} onClick={props.onClose} text="Regresar" />
                             {isAlert && <Alert severity="info">Campos incompletos</Alert>}
                             {(isInfo) && <Alert severity="info">{response_backend.data.Message}</Alert>}

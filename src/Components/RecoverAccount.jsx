@@ -90,10 +90,7 @@ const RecoverAccount = (props) => {
             if (!isSendMail) {
                 formdata.append('_email', Email);
             } else {
-                alert(Email);
-                alert(Token);
-                alert(PassWord);
-                alert(id);
+             
                 formdata.append('_email', Email);
                 formdata.append("redis_token", String(Token));
                 formdata.append("id", String(id));

@@ -3,10 +3,12 @@ import CardContent from '@mui/material/CardContent';
 import Card from '@mui/material/Card';
 import ButtonComponent from "./Button";
 import InputComponent from "./InputComponent";
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useContext} from "react";
 import CreateUser from "./CreateUser";
 import ActivateAccount from "./ActivateAccount";
 import RecoverAccount from "./RecoverAccount";
+import {dataContext} from "./Context/MetricsContext";
+
 
 
 const LoginUserForm = () => {
@@ -22,11 +24,13 @@ const LoginUserForm = () => {
     const [isWarning, setWarning] = useState(false);
     const [isInfo, setInfo] = useState(false);
     const [isError, setError] = useState(false);
-    const [createData, setCreateData] = useState('');
     const [isActivatedUser, setActivateRedis] = useState(false);
     const [RecoverAccountUser, setRecover] = useState(false);
-    const [RecoverInput, setRecoverInput] = useState(false);
-    const [RecoverData, setRecoverData] = useState('');
+    const [id,setID] = useState('');
+    const [userMailB,setUserMailB] = useState('');
+    const {loginSuccess,setLoginSuccess} = useContext(dataContext);
+ 
+
 
 
     const handleCloseModal = () => { setOpen(false) }
@@ -35,6 +39,14 @@ const LoginUserForm = () => {
     }
     const handleCloseModalRedis = () => { setOpenRedis(false); setActivateRedis(false); }
     const handleCloseModalRecover = () => { setRecover(false) }
+
+
+    useEffect(()=>{
+        console.log(loginSuccess)
+    },[loginSuccess])
+
+
+
     useEffect(() => {
         if (isAlert) {
             const timer = setTimeout(() => setIsAlert(false), 3000);
@@ -106,7 +118,16 @@ const LoginUserForm = () => {
                     case 200:
                         setResponseB(data);
                         if (data.data.Message === 'Correo enviado correctamente') {
-                            setActivateRedis(true);
+                            setID(data.data.id);
+                            setUserMailB(data.data.email);
+                            debugger;
+                            setOpenRedis(true);
+                            isActivatedUser(true);
+                        }else{
+                            debugger;
+                            alert(`Vamos a la interfaz principal ${loginSuccess}`);
+                            console.log(loginSuccess)
+                            setLoginSuccess(true);
                         }
                         debugger;
                         switch (data.data.Code) {
@@ -142,6 +163,7 @@ const LoginUserForm = () => {
                 setPassword('');
                 setLoadingScreen(false);
                 setError(true);
+                console.log(error);
                 setResponseB(`SERVER INTERNAL ERROR: ${error.message}`);
             })
         }
@@ -208,7 +230,7 @@ const LoginUserForm = () => {
                 setOpenRedis(true);
                 setRecoverData(data);
             }}></RecoverAccount>
-            <ActivateAccount open={openRedis} onClose={handleCloseModalRedis} email={createData?.email || RecoverData.email} id={createData?.id || RecoverData.id} recover={true}></ActivateAccount>
+            <ActivateAccount open={openRedis} onClose={handleCloseModalRedis} email={userMailB} id={id}></ActivateAccount>
             <Backdrop open={openLoadingScreen} sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}>
                 <CircularProgress />
             </Backdrop>
