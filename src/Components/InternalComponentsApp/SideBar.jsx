@@ -1,26 +1,44 @@
 import {
     Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton,
     Toolbar, AppBar, Typography, Box, Grid, Paper, ListItemButton,
-    useMediaQuery, useTheme, Container, CardHeader, CardContent, Card
+    useMediaQuery, useTheme, Container, CardHeader, CardContent, Card, ListSubheader, Stack,
+    Badge
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
-import MenuIcon from "@mui/icons-material/Menu"
-import { Stack } from "@mui/material";
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MenuIcon from "@mui/icons-material/Menu";
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import LogoutIcon from '@mui/icons-material/Logout';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import SettingsIcon from '@mui/icons-material/Settings';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+
 import { useEffect, useState } from "react";
+import image from '../../../public/recetaFacil.png';
+import MainMenu from "./mainMenu";
 const SideBar = () => {
     const [top, setTop] = useState('65');
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         if (!isMobile) handleAppBarClose()
+        if (isMobile) setTop('0');
     }, [isMobile])
 
 
     const handleAppBar = () => {
-        setOpen(true);
-        setTop('0');
+        if (isMobile) {
+            setOpen(true);
+            setTop('0');
+        } else {
+            let val = (open) ? false : true;
+            setOpen(val);
+        }
+
     }
     const handleAppBarClose = () => {
         setOpen(false);
@@ -31,60 +49,99 @@ const SideBar = () => {
         <>
             <AppBar elevation={0} position="fixed" sx={{ p: 0, borderBottom: 'thin solid rgba(156, 156, 156, 0.12)', background: 'rgba(99, 99, 99, 0.12)' }}>
                 <Toolbar sx={{ bgcolor: '#ffffffff' }}>
-                    {isMobile && (<IconButton onClick={handleAppBar}>
+                    <IconButton onClick={handleAppBar}>
                         <MenuIcon />
-                    </IconButton>)}
-                    <Typography sx={{ color: 'black' }}>{isMobile ? 'En telefono' : 'En Escritorio'}</Typography>
+                    </IconButton>
+                    <img src={image} width='100px' height='60px'></img>
+                    <Stack direction='row' spacing={1} sx={{ display: 'Flex', ml: 'auto' }}>
+                        <Box sx={{}}>
+                            <IconButton>
+                                <Badge badgeContent={1} color='primary'>
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>
+                            <IconButton>
+                                <AccountCircleIcon />
+                            </IconButton>
+                        </Box>
+                    </Stack>
                 </Toolbar>
             </AppBar>
-            <Drawer variant={isMobile ? 'temporary' : 'permanent'} open={open} slotProps={{
+            <Drawer variant={isMobile ? 'temporary' : 'persistent'} open={open} slotProps={{
                 paper: {
                     sx:
                     {
-                        width: '200px',
+                        width: '250px',
                         top: `${top}px`,
+                        height: `calc(100% -  ${top}px)`
                     }
                 }
             }}>
-
                 <Box sx={{ m: 0, p: 0 }}>
-                    <List >
+                    <List subheader={
+                        <ListSubheader sx={{
+                            bgcolor: 'grey.300',
+                            color: 'primary.main',
+                            fontWeight: 'bold',
+                            fontSize: 12,
+                            letterSpacing: 1,
+                            textTransform: 'uppercase',
+                            lineHeight: '32px'
+                        }} component="div">Menu de opciones</ListSubheader>
+                    }>
                         <ListItemButton>
                             <ListItemIcon>
-                                <HomeIcon /><ListItemText primary="Inicio"></ListItemText>
+                                <Toolbar><HomeIcon /><ListItemText primary="Inicio"></ListItemText></Toolbar>
                             </ListItemIcon>
                         </ListItemButton>
                         <ListItemButton>
                             <ListItemIcon>
-                                <HomeIcon /><ListItemText primary="Inicio"></ListItemText>
+                                <Toolbar><CalculateIcon /><ListItemText primary="Crea tu Receta"></ListItemText></Toolbar>
+                            </ListItemIcon>
+                        </ListItemButton>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <Toolbar><LibraryBooksIcon /><ListItemText primary="Colleciones"></ListItemText></Toolbar>
+                            </ListItemIcon>
+                        </ListItemButton>
+                    </List>
+                    <List subheader={
+                        <ListSubheader sx={{
+                            bgcolor: 'grey.300',
+                            color: 'primary.main',
+                            fontWeight: 'bold',
+                            fontSize: 12,
+                            letterSpacing: 1,
+                            textTransform: 'uppercase',
+                            lineHeight: '32px'
+                        }} component="div">Estadisticas</ListSubheader>
+                    }>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <Toolbar><EqualizerIcon /><ListItemText primary="Graficos"></ListItemText></Toolbar>
                             </ListItemIcon>
                         </ListItemButton>
                     </List>
                 </Box>
                 <Box sx={{ flexGrow: 1 }} />
-                {isMobile && (<Box sx={{ flexFlow: 1, justifyContent: 'flex-end' }}>
-                    <ListItemButton onClick={handleAppBarClose}>
-                        <ListItemIcon>
-                            <HomeIcon /><ListItemText primary="Cerrar"></ListItemText>
-                        </ListItemIcon>
-                    </ListItemButton>
-                </Box>)}
+                <Toolbar>
+                    <Box sx={{ justifyContent: 'flex-end' }}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <LogoutIcon /><ListItemText primary="LogOut"></ListItemText>
+                            </ListItemIcon>
+                        </ListItemButton>
+                    </Box>
+                    {isMobile && (<Box sx={{ flexFlow: 1, justifyContent: 'flex-end' }}>
+                        <ListItemButton onClick={handleAppBarClose}>
+                            <ListItemIcon>
+                                <KeyboardDoubleArrowLeftIcon />
+                            </ListItemIcon>
+                        </ListItemButton>
+                    </Box>)}
+                </Toolbar>
             </Drawer>
-            <Toolbar></Toolbar>
-            <Container>
-                <Box sx={{ p: 1 }}>
-                    <Grid container>
-                        <Typography>Menu Principal</Typography>
-                        <Grid item>
-                            <Card>
-
-                                <CardHeader><Typography>Collecion 1</Typography></CardHeader>
-                                <CardContent>Aqui va la coleccion</CardContent>
-                            </Card>
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Container>
+         
 
         </>
 
