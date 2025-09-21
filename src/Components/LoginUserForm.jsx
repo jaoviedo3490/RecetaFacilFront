@@ -3,11 +3,11 @@ import CardContent from '@mui/material/CardContent';
 import Card from '@mui/material/Card';
 import ButtonComponent from "./Button";
 import InputComponent from "./InputComponent";
-import { useState, useEffect ,useContext} from "react";
+import { useState, useEffect, useContext } from "react";
 import CreateUser from "./CreateUser";
 import ActivateAccount from "./ActivateAccount";
 import RecoverAccount from "./RecoverAccount";
-import {dataContext} from "./Context/MetricsContext";
+import { dataContext } from "./Context/MetricsContext";
 
 
 
@@ -26,10 +26,10 @@ const LoginUserForm = () => {
     const [isError, setError] = useState(false);
     const [isActivatedUser, setActivateRedis] = useState(false);
     const [RecoverAccountUser, setRecover] = useState(false);
-    const [id,setID] = useState('');
-    const [userMailB,setUserMailB] = useState('');
-    const {loginSuccess,setLoginSuccess} = useContext(dataContext);
- 
+    const [id, setID] = useState('');
+    const [userMailB, setUserMailB] = useState('');
+    const { loginSuccess, setLoginSuccess } = useContext(dataContext);
+
 
 
 
@@ -41,9 +41,9 @@ const LoginUserForm = () => {
     const handleCloseModalRecover = () => { setRecover(false) }
 
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(loginSuccess)
-    },[loginSuccess])
+    }, [loginSuccess])
 
 
 
@@ -123,11 +123,15 @@ const LoginUserForm = () => {
                             debugger;
                             setOpenRedis(true);
                             isActivatedUser(true);
-                        }else{
+                        } else {
                             debugger;
-                            alert(`Vamos a la interfaz principal ${loginSuccess}`);
-                            console.log(loginSuccess)
-                            setLoginSuccess(true);
+                            console.log(data)
+                            if (data.data.Code === 200) {
+                                setLoginSuccess(true);
+                                //alert(`Vamos a la interfaz principal ${loginSuccess}`);
+                                localStorage.setItem("correo", UserMail);
+                            }
+
                         }
                         debugger;
                         switch (data.data.Code) {

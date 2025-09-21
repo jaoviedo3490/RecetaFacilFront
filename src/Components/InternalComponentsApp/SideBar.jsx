@@ -1,28 +1,23 @@
 import {
-    Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton,
-    Toolbar, AppBar, Typography, Box, Grid, Paper, ListItemButton,
-    useMediaQuery, useTheme, Container, CardHeader, CardContent, Card, ListSubheader, Stack,
-    Badge
+    Drawer, List, ListItemIcon, ListItemText,
+    Toolbar, Typography, Box, Grid, ListItemButton,
+    useMediaQuery, useTheme, Container, ListSubheader
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import EqualizerIcon from '@mui/icons-material/Equalizer';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import MenuIcon from "@mui/icons-material/Menu";
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CalculateIcon from '@mui/icons-material/Calculate';
-import SettingsIcon from '@mui/icons-material/Settings';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { dataContext } from "../Context/MetricsContext";
+import { useEffect, useState,useContext } from "react";
 
-import { useEffect, useState } from "react";
-import image from '../../../public/recetaFacil.png';
-import MainMenu from "./mainMenu";
 const SideBar = () => {
-    const [top, setTop] = useState('65');
-    const [open, setOpen] = useState(true);
+    const {top, setTop} = useContext(dataContext);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const {openDrawer,setOpenDrawer} = useContext(dataContext);
+
 
     useEffect(() => {
         if (!isMobile) handleAppBarClose()
@@ -32,42 +27,22 @@ const SideBar = () => {
 
     const handleAppBar = () => {
         if (isMobile) {
-            setOpen(true);
+            setOpenDrawer(true);
             setTop('0');
         } else {
-            let val = (open) ? false : true;
-            setOpen(val);
+            let val = (openDrawer) ? false : true;
+            setOpenDrawer(val);
         }
 
     }
     const handleAppBarClose = () => {
-        setOpen(false);
+        setOpenDrawer(false);
         setTop('65');
     }
 
     return (
         <>
-            <AppBar elevation={0} position="fixed" sx={{ p: 0, borderBottom: 'thin solid rgba(156, 156, 156, 0.12)', background: 'rgba(99, 99, 99, 0.12)' }}>
-                <Toolbar sx={{ bgcolor: '#ffffffff' }}>
-                    <IconButton onClick={handleAppBar}>
-                        <MenuIcon />
-                    </IconButton>
-                    <img src={image} width='100px' height='60px'></img>
-                    <Stack direction='row' spacing={1} sx={{ display: 'Flex', ml: 'auto' }}>
-                        <Box sx={{}}>
-                            <IconButton>
-                                <Badge badgeContent={1} color='primary'>
-                                    <NotificationsIcon />
-                                </Badge>
-                            </IconButton>
-                            <IconButton>
-                                <AccountCircleIcon />
-                            </IconButton>
-                        </Box>
-                    </Stack>
-                </Toolbar>
-            </AppBar>
-            <Drawer variant={isMobile ? 'temporary' : 'persistent'} open={open} slotProps={{
+            <Drawer variant={isMobile ? 'temporary' : 'persistent'} open={openDrawer} slotProps={{
                 paper: {
                     sx:
                     {
@@ -141,8 +116,7 @@ const SideBar = () => {
                     </Box>)}
                 </Toolbar>
             </Drawer>
-         
-
+            <Toolbar></Toolbar>
         </>
 
     );
