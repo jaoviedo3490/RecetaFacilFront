@@ -8,6 +8,7 @@ import { useContext } from "react";
 const MainMenu = () => {
     const { openDrawer } = useContext(dataContext);
     const { loginSuccess } = useContext(dataContext);
+   
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -15,12 +16,10 @@ const MainMenu = () => {
         <>
             {loginSuccess && (
                 <>
-                <AppBarContent />
-                <SideBar></SideBar>
-                <Box>
+                    <AppBarContent />
+                    <SideBar/>
                     <MainContent />
-                </Box>
-            </>)
+                </>)
             }
         </>
     );

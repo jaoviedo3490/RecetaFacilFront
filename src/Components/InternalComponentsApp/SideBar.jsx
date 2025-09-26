@@ -10,31 +10,63 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import LogoutIcon from '@mui/icons-material/Logout';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import { dataContext } from "../Context/MetricsContext";
-import { useEffect, useState,useContext } from "react";
+import { useEffect, useContext } from "react";
+
 
 const SideBar = () => {
-    const {top, setTop} = useContext(dataContext);
+    const { top, setTop } = useContext(dataContext);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const {openDrawer,setOpenDrawer} = useContext(dataContext);
+    const { openDrawer, setOpenDrawer } = useContext(dataContext);
+    const correo = localStorage.getItem("correo");
+    const { setOptions, menuOptions } = useContext(dataContext);
 
 
+    const handleLogout = () => {
+        const formData = new FormData();
+        formData.append('mail', correo);
+        formData.append('token', localStorage.getItem('barer'));
+        fetch('http://localhost/recetaFacil/RecetaFacil.com/public/Session/Jwt/Logout', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (!response.ok) {
+                return {
+                    data: { 'Code': 500, "Message": "Error interno del servidor" }
+                }
+            }
+            return response.json();
+        }).then(data => {
+            switch (data.statusCode || data.Code) {
+                case 200:
+                    if (data.statusCode.Code === 200) {
+                        localStorage.removeItem("correo"); debugger;
+                        localStorage.removeItem("barer"); debugger;
+                        window.location.href = '/login';
+                    }
+                case 401:
+                    localStorage.removeItem("correo"); debugger;
+                    localStorage.removeItem("barer"); debugger;
+                    window.location.href = '/login';
+                    window.location.href = '/login';
+                    break;
+                default: break;
+            }
+        })
+    }
+
+    const handleDashboard = () => {
+        setOptions("dashboard")
+    }
+    const handleRecetas = ()=>{
+        setOptions("receta")
+    }
     useEffect(() => {
         if (!isMobile) handleAppBarClose()
         if (isMobile) setTop('0');
     }, [isMobile])
 
 
-    const handleAppBar = () => {
-        if (isMobile) {
-            setOpenDrawer(true);
-            setTop('0');
-        } else {
-            let val = (openDrawer) ? false : true;
-            setOpenDrawer(val);
-        }
-
-    }
     const handleAppBarClose = () => {
         setOpenDrawer(false);
         setTop('65');
@@ -64,12 +96,12 @@ const SideBar = () => {
                             lineHeight: '32px'
                         }} component="div">Menu de opciones</ListSubheader>
                     }>
-                        <ListItemButton>
+                        <ListItemButton onClick={handleDashboard }>
                             <ListItemIcon>
                                 <Toolbar><HomeIcon /><ListItemText primary="Inicio"></ListItemText></Toolbar>
                             </ListItemIcon>
                         </ListItemButton>
-                        <ListItemButton>
+                        <ListItemButton onClick={handleRecetas}>
                             <ListItemIcon>
                                 <Toolbar><CalculateIcon /><ListItemText primary="Crea tu Receta"></ListItemText></Toolbar>
                             </ListItemIcon>
@@ -101,7 +133,7 @@ const SideBar = () => {
                 <Box sx={{ flexGrow: 1 }} />
                 <Toolbar>
                     <Box sx={{ justifyContent: 'flex-end' }}>
-                        <ListItemButton>
+                        <ListItemButton onClick={handleLogout}>
                             <ListItemIcon>
                                 <LogoutIcon /><ListItemText primary="LogOut"></ListItemText>
                             </ListItemIcon>
@@ -116,7 +148,6 @@ const SideBar = () => {
                     </Box>)}
                 </Toolbar>
             </Drawer>
-            <Toolbar></Toolbar>
         </>
 
     );

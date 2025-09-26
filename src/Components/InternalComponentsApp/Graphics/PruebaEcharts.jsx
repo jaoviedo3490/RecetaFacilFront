@@ -1,6 +1,19 @@
 import ReactECharts from "echarts-for-react";
-import { Box, Typography ,useTheme,useMediaQuery} from "@mui/material";
+import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
+import { dataContext } from "../../Context/MetricsContext";
+import { useContext } from "react";
 const PruebaECharts = () => {
+    const { openDrawer } = useContext(dataContext);
+    const { eChartData, setChartData } = useContext(dataContext);
+ 
+    const dataKeys = Object.keys(eChartData);
+    let Dias = [];
+    let Cantidad = [];
+    const arr = dataKeys.map((obj)=>{
+        Cantidad.push(eChartData[obj].CANTIDAD);
+        Dias.push(eChartData[obj].DIA);
+    })
+
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const option = {
@@ -25,7 +38,7 @@ const PruebaECharts = () => {
         },
         xAxis: {
             type: "category",
-            data: ["Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Hoy"]
+            data: Dias
         },
         yAxis: {
             type: "value"
@@ -35,14 +48,14 @@ const PruebaECharts = () => {
                 name: "Recetas",
                 type: "line",
                 smooth: true,
-                data: [2, 1, 3, 2, 5, 2, 1, 0]
+                data: Cantidad
             }
         ]
     };
 
     return (
-        <Box sx={{ width: isMobile ? "100%":'65%', height: 400 }}>
-            <ReactECharts option={option} style={{ height: 350 }} />
+        <Box sx={{ width: isMobile ? "100%" : '100%', height: 400 }}>
+            <ReactECharts option={option} style={{ height: 400 }} />
         </Box>
     );
 };
