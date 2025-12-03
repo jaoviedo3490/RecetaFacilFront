@@ -1,7 +1,7 @@
 import {
     Drawer, List, ListItemIcon, ListItemText,
-    Toolbar, Typography, Box, Grid, ListItemButton,
-    useMediaQuery, useTheme, Container, ListSubheader
+    Toolbar, Box, ListItemButton,
+    useMediaQuery, useTheme, ListSubheader
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import EqualizerIcon from '@mui/icons-material/Equalizer';
@@ -12,7 +12,6 @@ import CalculateIcon from '@mui/icons-material/Calculate';
 import { dataContext } from "../Context/MetricsContext";
 import { useEffect, useContext } from "react";
 
-
 const SideBar = () => {
     const { top, setTop } = useContext(dataContext);
     const theme = useTheme();
@@ -20,7 +19,6 @@ const SideBar = () => {
     const { openDrawer, setOpenDrawer } = useContext(dataContext);
     const correo = localStorage.getItem("correo");
     const { setOptions, menuOptions } = useContext(dataContext);
-
 
     const handleLogout = () => {
         const formData = new FormData();
@@ -40,14 +38,13 @@ const SideBar = () => {
             switch (data.statusCode || data.Code) {
                 case 200:
                     if (data.statusCode.Code === 200) {
-                        localStorage.removeItem("correo"); debugger;
-                        localStorage.removeItem("barer"); debugger;
+                        localStorage.removeItem("correo");
+                        localStorage.removeItem("barer");
                         window.location.href = '/login';
                     }
                 case 401:
-                    localStorage.removeItem("correo"); debugger;
-                    localStorage.removeItem("barer"); debugger;
-                    window.location.href = '/login';
+                    localStorage.removeItem("correo");
+                    localStorage.removeItem("barer");
                     window.location.href = '/login';
                     break;
                 default: break;
@@ -55,17 +52,15 @@ const SideBar = () => {
         })
     }
 
-    const handleDashboard = () => {
-        setOptions("dashboard")
-    }
-    const handleRecetas = ()=>{
-        setOptions("receta")
-    }
+    const handleDashboard = () => setOptions("dashboard");
+    const handleRecetas = () => setOptions("receta");
+    const handleCollection = () => setOptions("collection");
+    const handleGraficos = () => setOptions("graficos");
+
     useEffect(() => {
         if (!isMobile) handleAppBarClose()
         if (isMobile) setTop('0');
     }, [isMobile])
-
 
     const handleAppBarClose = () => {
         setOpenDrawer(false);
@@ -76,8 +71,7 @@ const SideBar = () => {
         <>
             <Drawer variant={isMobile ? 'temporary' : 'persistent'} open={openDrawer} slotProps={{
                 paper: {
-                    sx:
-                    {
+                    sx: {
                         width: '250px',
                         top: `${top}px`,
                         height: `calc(100% -  ${top}px)`
@@ -96,22 +90,55 @@ const SideBar = () => {
                             lineHeight: '32px'
                         }} component="div">Menu de opciones</ListSubheader>
                     }>
-                        <ListItemButton onClick={handleDashboard }>
+                        <ListItemButton
+                            onClick={handleDashboard}
+                            selected={menuOptions === "dashboard"}
+                            sx={{
+                                '&.Mui-selected': {
+                                    bgcolor: '#e3f2fd',   
+                                    '& .MuiSvgIcon-root': { color: '#1976d2' }
+                                },
+                                '&.Mui-selected:hover': { bgcolor: '#bbdefb' }
+                            }}
+                        >
                             <ListItemIcon>
-                                <Toolbar><HomeIcon /><ListItemText primary="Inicio"></ListItemText></Toolbar>
+                                <Toolbar><HomeIcon /><ListItemText primary="Inicio" /></Toolbar>
                             </ListItemIcon>
                         </ListItemButton>
-                        <ListItemButton onClick={handleRecetas}>
+
+                        <ListItemButton
+                            onClick={handleRecetas}
+                            selected={menuOptions === "receta"}
+                            sx={{
+                                '&.Mui-selected': {
+                                    bgcolor: '#e3f2fd',   
+                                    '& .MuiSvgIcon-root': { color: '#1976d2' }
+                                },
+                                '&.Mui-selected:hover': { bgcolor: '#bbdefb' }
+                            }}
+                        >
                             <ListItemIcon>
-                                <Toolbar><CalculateIcon /><ListItemText primary="Crea tu Receta"></ListItemText></Toolbar>
+                                <Toolbar><CalculateIcon /><ListItemText primary="Crea tu Receta" /></Toolbar>
                             </ListItemIcon>
                         </ListItemButton>
-                        <ListItemButton>
+
+                        <ListItemButton
+                            onClick={handleCollection}
+                            selected={menuOptions === "collection"}
+                            sx={{
+                                '&.Mui-selected': {
+                                    bgcolor: '#e3f2fd',   
+                                    '& .MuiSvgIcon-root': { color: '#1976d2' }
+                                },
+                                '&.Mui-selected:hover': { bgcolor: '#bbdefb' }
+                            }}
+                        >
                             <ListItemIcon>
-                                <Toolbar><LibraryBooksIcon /><ListItemText primary="Colleciones"></ListItemText></Toolbar>
+                                <Toolbar><LibraryBooksIcon /><ListItemText primary="Colecciones" /></Toolbar>
                             </ListItemIcon>
                         </ListItemButton>
                     </List>
+
                     <List subheader={
                         <ListSubheader sx={{
                             bgcolor: 'grey.300',
@@ -121,35 +148,47 @@ const SideBar = () => {
                             letterSpacing: 1,
                             textTransform: 'uppercase',
                             lineHeight: '32px'
-                        }} component="div">Estadisticas</ListSubheader>
+                        }} component="div">Estadísticas</ListSubheader>
                     }>
-                        <ListItemButton>
+                        <ListItemButton
+                            onClick={handleGraficos}
+                            selected={menuOptions === "graficos"}
+                            sx={{
+                                '&.Mui-selected': {
+                                    bgcolor: '#e3f2fd',   
+                                    '& .MuiSvgIcon-root': { color: '#1976d2' }
+                                },
+                                '&.Mui-selected:hover': { bgcolor: '#bbdefb' }
+                            }}
+                        >
                             <ListItemIcon>
-                                <Toolbar><EqualizerIcon /><ListItemText primary="Graficos"></ListItemText></Toolbar>
+                                <Toolbar><EqualizerIcon /><ListItemText primary="Gráficos" /></Toolbar>
                             </ListItemIcon>
                         </ListItemButton>
                     </List>
                 </Box>
+
                 <Box sx={{ flexGrow: 1 }} />
                 <Toolbar>
                     <Box sx={{ justifyContent: 'flex-end' }}>
                         <ListItemButton onClick={handleLogout}>
                             <ListItemIcon>
-                                <LogoutIcon /><ListItemText primary="LogOut"></ListItemText>
+                                <LogoutIcon /><ListItemText primary="LogOut" />
                             </ListItemIcon>
                         </ListItemButton>
                     </Box>
-                    {isMobile && (<Box sx={{ flexFlow: 1, justifyContent: 'flex-end' }}>
-                        <ListItemButton onClick={handleAppBarClose}>
-                            <ListItemIcon>
-                                <KeyboardDoubleArrowLeftIcon />
-                            </ListItemIcon>
-                        </ListItemButton>
-                    </Box>)}
+                    {isMobile && (
+                        <Box sx={{ flexFlow: 1, justifyContent: 'flex-end' }}>
+                            <ListItemButton onClick={handleAppBarClose}>
+                                <ListItemIcon>
+                                    <KeyboardDoubleArrowLeftIcon />
+                                </ListItemIcon>
+                            </ListItemButton>
+                        </Box>
+                    )}
                 </Toolbar>
             </Drawer>
         </>
-
     );
 }
 

@@ -4,6 +4,12 @@ import { Box,Card, CardContent } from "@mui/material";
 const PruebaSunburstChart = () => {
   const option = {
     title: { text: "Categorías de Ingredientes", left: "center" },
+     toolbox: {
+            feature: {
+                saveAsImage: {},
+                restore: {},
+            }
+        },
     series: [{
       type: 'sunburst',
       data: [
@@ -16,13 +22,11 @@ const PruebaSunburstChart = () => {
   };
 
   return (
-    <Card>
-      <CardContent>
+    
         <Box sx={{ width: "100%", height: 400 }}>
           <ReactECharts option={option} style={{ height: '100%' }} />
         </Box>
-      </CardContent>
-    </Card>
+    
   );
 };
 

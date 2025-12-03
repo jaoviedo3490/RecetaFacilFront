@@ -61,30 +61,27 @@ const ActivateAccount = (props) => {
     }, [isInfo]);
     const ActivateLogin = (Event) => {
        Event.preventDefault();
-        debugger
+        /*debugger*/
         if (Token.length < 3) {
             setIsAlert(true);
             setSuccess(false);
         } else {
             setIsAlert(false);
-            debugger
+            /*debugger*/
             let formdata = new FormData();
-
-            alert(Token)
-            alert(props.email)
-            alert(props.id)
-            formdata.append('email', props.email);
+            formdata.append('email', localStorage.getItem('email'));
             formdata.append('token', Token);
-            formdata.append('id', props.id);
+            formdata.append('id', localStorage.getItem('tempData'));
             console.log(props.email);
             console.log(props.id);
             console.log(Token);
-            debugger
+            /*debugger*/
             setLoadingScreen(true) ;
             fetch('http://localhost/recetaFacil/RecetaFacil.com/public/Services/loginUser/ActivateAccount', {
                 method: 'POST',
                 body: formdata
             }).then(response => {
+                localStorage.removeItem('tempData');
                 if (!response.ok) {
                     return {
                         statusCode: 500,
@@ -94,6 +91,8 @@ const ActivateAccount = (props) => {
                 return response.json();
 
             }).then(data => {
+                localStorage.removeItem("tempData");
+                localStorage.removeItem("email");
                 console.log(`${JSON.stringify(data)}`);
                 switch (data.statusCode) {
                     case 200:
@@ -108,7 +107,7 @@ const ActivateAccount = (props) => {
                             default: setInfo(true); break;
                         }
                         setResponseB(data);
-                        debugger
+                        /*debugger*/
                         break;
                     case 500:
                         setError(true);
@@ -116,7 +115,7 @@ const ActivateAccount = (props) => {
                     default:
                         setWarning(true);
                         setResponseB(data);
-                        debugger;
+                        /*debugger*/;
                 }
                 setLoadingScreen(false);
             }).catch(error => {

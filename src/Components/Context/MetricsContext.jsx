@@ -17,6 +17,7 @@ const UserProvide = ({ children }) => {
     const token = localStorage.getItem('barer');
 
 
+
     useEffect(() => {
         if (!correo) return;
         let formdata = new FormData();
@@ -24,7 +25,7 @@ const UserProvide = ({ children }) => {
         formdata.append('token', token);
         formdata.append('protocol', 'getVar');
 
-        debugger;
+        /*debugger*/;
         fetch('http://localhost/recetaFacil/RecetaFacil.com/public/Services/login/Jwt/Auth', {
             method: 'POST',
             body: formdata
@@ -40,8 +41,8 @@ const UserProvide = ({ children }) => {
                     setLoginSuccess(true);
                     break;
                 default:
-                    localStorage.removeItem("correo"); debugger;
-                    localStorage.removeItem("barer"); debugger;
+                    localStorage.removeItem("correo"); /*debugger*/;
+                    localStorage.removeItem("barer"); /*debugger*/;
                     setLoginSuccess(false);
                     break;
             }

@@ -12,6 +12,7 @@ import { dataContext } from "./Context/MetricsContext";
 
 
 const LoginUserForm = () => {
+
     const [UserMail, setUser] = useState('');
     const [Password, setPassword] = useState('');
     const [isAlert, setIsAlert] = useState(false);
@@ -31,7 +32,7 @@ const LoginUserForm = () => {
     const { loginSuccess, setLoginSuccess } = useContext(dataContext);
 
 
-
+    
 
     const handleCloseModal = () => { setOpen(false) }
     const RevealPassCheck = (Event) => {
@@ -120,26 +121,26 @@ const LoginUserForm = () => {
                         if (data.data.Message === 'Correo enviado correctamente') {
                             setID(data.data.id);
                             setUserMailB(data.data.email);
-                            debugger;
+                            /*debugger*/;
                             setOpenRedis(true);
                             isActivatedUser(true);
                         } else {
-                            debugger;
+                            /*debugger*/;
                             console.log(data)
                             if (data.data.Code === 200 && data.data.JWT.Code === 200) {
                                 setLoginSuccess(true);
                                 //alert(`Vamos a la interfaz principal ${loginSuccess}`);
                                 localStorage.setItem("correo", UserMail);
-                                localStorage.setItem("barer",data.data.JWT.token);
+                                localStorage.setItem("barer", data.data.JWT.token);
                             }
 
                         }
-                        debugger;
+                        /*debugger*/;
                         switch (data.data.Code) {
                             case 404: setInfo(true); break;
                             case 403: setWarning(true); break;
-                            case 200: if(!loginSuccess){
-                                setSuccess(false); 
+                            case 200: if (!loginSuccess) {
+                                setSuccess(false);
                                 setError(true);
                                 setResponseB(data.data.JWT.Message);
                                 break;

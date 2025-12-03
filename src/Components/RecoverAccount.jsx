@@ -78,11 +78,11 @@ const RecoverAccount = (props) => {
             setIsAlert(true);
             setSuccess(false);
         } else if (Email.length > 3 || isSendMail) {
-            debugger;
+            /*debugger*/;
             if (PassWord !== PassWordC) {
                 setIsAlert(true);
                 setSuccess(false);
-                debugger;
+                /*debugger*/;
             }
             setIsAlert(false);
             let formdata = new FormData();
@@ -135,7 +135,7 @@ const RecoverAccount = (props) => {
                             default: setInfo(true); break;
                         }
                         setResponseB(data);
-                        debugger
+                        /*debugger*/
                         break;
                     case 500:
                         setError(true);
@@ -145,7 +145,7 @@ const RecoverAccount = (props) => {
                     default:
                         setWarning(true);
                         setResponseB(data);
-                        debugger;
+                        /*debugger*/;
                         break;
                 }
                 setLoadingScreen(false);

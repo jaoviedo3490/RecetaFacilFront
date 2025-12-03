@@ -67,11 +67,14 @@ const CreateUser = (props) => {
             setUserName('');
             setPassWordVerify('');
             setLoadingScreen(false);
-            debugger;
+            /*debugger*/;
             switch (data.statusCode) {
                 case 200:
                     if (data.data.Code === '200') {
+                        
                         SetResponseBack(data.data.Message);
+                        localStorage.setItem('tempData',data.data.Data.id);
+                        localStorage.setItem('email',UserMail);
                         setSuccess(true);
                         props.onClose();
                         if (props.onSuccess) {
@@ -97,12 +100,12 @@ const CreateUser = (props) => {
                     }
                     break;
                 case 500:
-                    debugger;
+                    /*debugger*/;
                     SetResponseBack(data.Message);
                     setError(true);
                     break;
                 default:
-                    debugger;
+                    /*debugger*/;
                     SetResponseBack(data.Message);
                     setWarning(true);
                     break;
